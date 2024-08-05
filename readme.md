@@ -1,3 +1,51 @@
+# 삼성 갤럭시 Book2 Pro의 리눅스
+
+[Samsung Galaxy Book2 Pro(NP950XED-KA2SE)](https://www.samsung.com/se/business/computers/galaxy-book/galaxy-book2-pro-15inch-i7-16gb-512gb-np950xed-ka2se/) 에서 Ubunutu 23.04(이전 22.10)를 실행하고 있습니다. 이 저장소에는 다양한 구성과 사용자 지정 드라이버에 대한 다양한 메모가 포함되어 있습니다.
+
+```sh
+$ sudo dmesg
+[0.0000] 마이크로코드 : 마이크로코드 조기 업데이트 0x42c, 일자 = 2023-04-18
+[0.0000] Linux 버전 6.2.0-34-generic (buildd@lcy02-amd64-025) (x86_64-linux-gnu-gcc-12 (Ubuntu 12.3.0-1Ubuntu1~23.04) 12.3.0, GNU ld (Ubuntu용 GNU Binutils) 2.40) #34-Ubuntu SMP PREECT_DYNAMY 2023년 9월 4일 13:06:55 UTC (Ubuntu 6.2.0-34.34-generic 6.2.16)
+[0.0000] 명령줄: BOOT_IMAGE=/boot/vmlinuz-6.2.0-34-generic root=UUID=048b3a23-f56e-4447-8d23-59f889235454 roquious 스플래시 i915.enable_dpcd_backlight=3 vt.handoff=7
+...
+[0.0000] DMI : 삼성전자(주) 950XED/NP950XED-KA2SE, BIOS P11RGF.057.230404.ZQ 04/04/2023
+...
+
+$ lsb_release -a
+LSB 모듈을 사용할 수 없습니다.
+배포자 ID: Ubuntu
+설명: Ubuntu 23.04
+발매 : 23.04
+코드명 : lunar
+```
+
+노트북에 Linux를 설치하려면 Secure Boot의 BIOS 설정을 다음 중 하나로 조정해야 합니다
+- 시큐어 부트 컨트롤을 온으로 설정한 상태에서 리눅스를 실행하려면 시큐어 부트를 지원하기 위해 인증서가 서명된 커널(우분투의 기본 커널 패키지 포함)만 사용하면 시큐어 부트 인증서 키셋을 시큐어 부트 지원 OS로 설정합니다.
+- 서명되지 않은 커널을 실행하려면(커널을 직접 컴파일하려는 경우 등) 'Secure Boot Control'을 'Off'로 설정하면 됩니다.
+
+## 리눅스 플랫폼 드라이버
+
+여기에서 찾을 수 있는 "Samsung Galaxybook"이라는 장치용 Linux Kernel 플랫폼 드라이버의 시작을 만들었습니다. <https://github.com/joshuagrisham/samsung-galaxybook-extras >
+
+이 드라이버는 최근에 출시된 삼성 갤럭시 북 시리즈 노트북의 많은 부분을 실제로 지원할 수 있을 것으로 보입니다(제가 가지고 있는 갤럭시 북2 프로 뿐만 아니라).
+
+이 드라이버를 사용하면 적어도 다음과 같은 기능을 제어할 수 있을 것으로 예상됩니다:
+
+- 키보드 백라이트
+- 스피커용 "돌비 애트모스" 모드
+- 성능 모드(고성능, 최적화, 정숙, 무음)
+- 배터리 절약기(85%에서 충전 중지)
+- 뚜껑을 열면 장치가 자동으로 시작됩니다
+- USB 포트는 장치를 끌 때 충전을 제공합니다
+
+## 디스플레이 백라이트
+
+OLED 디스플레이 백라이트 제어를 위한 지원을 추가하기 위해 'i915.enable_dpcd_backlight=3' 부팅 파라미터를 추가할 수 있습니다
+
+예를 들어 Grub에서는 '/etc/default/grub' 파일을 수정하여 'GRUB_CMDLINE_LINUX_DEFACT' 값에 추가하고 'sudo update-grub'을 실행한 후 재부팅합니다.
+
+여기에서 업스트림 수정을 시도하고 실행하는 문제가 발생했습니다. [freedesktop.org : Samsung Galaxy Book 2 Pro의 백라이트 컨트롤 유형이 잘못됨](https://gitlab.freedesktop.org/drm/intel/-/issues/7972) .
+
 # Linux on the Samsung Galaxy Book2 Pro
 
 I am running Ubunutu 23.04 (previously 22.10) with the Ubuntu-packaged kernel version 6.2.x on my [Samsung Galaxy Book2 Pro (NP950XED-KA2SE)](https://www.samsung.com/se/business/computers/galaxy-book/galaxy-book2-pro-15inch-i7-16gb-512gb-np950xed-ka2se/). This repository contains various notes on different configurations and custom drivers which I am using.
